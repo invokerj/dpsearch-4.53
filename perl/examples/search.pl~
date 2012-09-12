@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+
+use Dataparksearch;
+
+# Init Dataparksearch
+my $search = new Dataparksearch('DBAddr' => 'pgsql://maxime@192.168.10.2/search/?dbmode=cache');
+
+# With two words, mode all,sort by rate, page size at 10 and page number at 1.
+
+         $search->query('query' => 'maxime apache',
+                        'mode' => 'all',
+                        'sort' => 'IRD',
+                        'ps' => '10',
+                        'pn' => 1);
+
+# Using results.
+         print 'Total found   :', $search->total_found,"\n";
+         print 'Page Number   :', $search->page_number,"\n";
+         print 'Pages Number  :', $search->num_pages,"\n";
+         print 'Is next ?     :', $search->is_next, "\n";
+         print 'work time     :', $search->work_time, " seconds\n";
+         print 'word info     :', $search->word_info, "\n";
+         print 'word info ext.:', $search->word_info_ext, "\n";
+         print 'word info     :', $search->W, "\n";
+         print 'word info ext.:', $search->WE, "\n";
+         print 'pn            :', $search->{'pn'}, "\n";
+
+         print sprintf('Results from %d to %d ', $search->first, $search->last),"\n\n";
+
+         foreach my $result ( $search->records ) {
+
+           print sprintf('[%d] %s -> %s [%dKo]',
+                         $result->{'ID'},
+                         $result->{'URL'},
+                         $result->{'title'},
+                         $result->{'Content-Length'}/1024),"\n";
+         }
